@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/layout/dense_web_layout.dart';
 import 'package:observer/layout/mobile_layout.dart';
 import 'package:observer/layout/responsive_layout.dart';
 import 'package:observer/layout/web_layout.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       home: const ResponsiveLayout(
         mobileScreenLayout: MobileLayout(),
         webScreenLayout: WebLayout(),
+        smallScreenLayout: DenseWebLayout(),
       ),
     );
   }
