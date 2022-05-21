@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/layout/dense_web_layout.dart';
 import 'package:observer/layout/mobile_layout.dart';
 import 'package:observer/layout/responsive_layout.dart';
 import 'package:observer/layout/web_layout.dart';
 import 'package:observer/resources/firebase_options.dart';
+import 'package:observer/screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         primaryColor: accentColor,
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      title: 'Flutter Demo',
+      title: 'Observer',
       home: const ResponsiveLayout(
         mobileScreenLayout: MobileLayout(),
         webScreenLayout: WebLayout(),

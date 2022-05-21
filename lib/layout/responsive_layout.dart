@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/global_variables.dart';
+import 'package:observer/helpers/size_guide.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget webScreenLayout;
@@ -15,6 +16,8 @@ class ResponsiveLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeGuide().init(context);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (kIsWeb) {
