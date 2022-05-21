@@ -1,9 +1,15 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/helpers/no_glow.dart';
 import 'package:observer/helpers/size_guide.dart';
+import 'package:observer/resources/authentication.dart';
+import 'package:observer/utils/snackbar_creator.dart';
+import 'package:observer/utils/utils.dart';
 import 'package:observer/widgets/query_button.dart';
 import 'package:observer/widgets/text_field_input.dart';
 
@@ -17,20 +23,68 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _mailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  ButtonState buttonState = ButtonState.init;
+  final TextEditingController _nameController = TextEditingController();
+  ButtonState _buttonState = ButtonState.init;
+  Uint8List? _image;
 
   @override
   void dispose() {
     super.dispose();
     _mailController.dispose();
     _passController.dispose();
+    _nameController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = im;
+    });
+  }
+
+  void triggerSignUp() async {
+    setState(() {
+      _buttonState = ButtonState.loading;
+    });
+
+    String computationResult = await Authentication().signUpUser(
+      email: _mailController.text,
+      name: _nameController.text,
+      passphrase: _passController.text,
+      profilepic: _image,
+    );
+
+    setState(() {
+      if (computationResult == "Observer node created successfully.") {
+        _buttonState = ButtonState.done;
+      } else {
+        _buttonState = ButtonState.init;
+      }
+    });
+
+    log(computationResult);
+    showSnackbar(
+      computationResult,
+      context,
+      snackbarIntent: computationResult == "Observer node created successfully."
+          ? SnackbarIntent.info
+          : SnackbarIntent.error,
+    );
+    await Future.delayed(
+      const Duration(
+        seconds: 1,
+      ),
+    );
+    setState(() {
+      _buttonState = ButtonState.init;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    bool _isLoading = (buttonState == ButtonState.loading) ||
-        (buttonState == ButtonState.done);
-    bool _isDone = buttonState == ButtonState.done;
+    bool _isLoading = (_buttonState == ButtonState.loading) ||
+        (_buttonState == ButtonState.done);
+    bool _isDone = _buttonState == ButtonState.done;
 
     return Scaffold(
       body: SafeArea(
@@ -43,10 +97,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Flexible(
                 child: Container(),
-                flex: 2,
+                flex: 1,
               ),
               SvgPicture.asset(
                 "assets/svg/logo.svg",
@@ -56,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16.0),
               const Text(
-                "Create new Account",
+                "New Observer Node",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w500,
@@ -66,11 +121,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 64),
               Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 48,
-                    backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1653045270357-f802a1de3855?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687'),
-                  ),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 48,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : const CircleAvatar(
+                          radius: 48,
+                          backgroundImage: NetworkImage(
+                              'https://firebasestorage.googleapis.com/v0/b/om-observer.appspot.com/o/observerProfiles%2FRZ9pseTFLuWci4ZwfJqStV3ozzf2?alt=media&token=fbfc2ec6-7726-401f-9d40-c5c690c5af01'),
+                        ),
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -85,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: mobileSearchColor,
                             size: 20,
                           ),
-                          onPressed: () {},
+                          onPressed: () => selectImage(),
                         ),
                       ),
                     ),
@@ -96,42 +156,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 32.0,
               ),
 
-              //email input field
-              TextFieldInput(
-                controller: _mailController,
-                hintText: "Observer ID",
-                inputType: TextInputType.emailAddress,
+              Expanded(
+                flex: 2,
+                child: ScrollConfiguration(
+                  behavior: NoGlow(),
+                  child: ListView(
+                    children: [
+                      //email input field
+                      TextFieldInput(
+                        controller: _nameController,
+                        hintText: "Full Name",
+                        inputType: TextInputType.name,
+                      ),
+                      const SizedBox(height: 8),
+                      TextFieldInput(
+                        controller: _mailController,
+                        hintText: "Observer ID",
+                        inputType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 8),
+                      //passwd input field
+                      TextFieldInput(
+                        controller: _passController,
+                        hintText: "Passphrase",
+                        inputType: TextInputType.visiblePassword,
+                        isPassword: true,
+                      ),
+
+                      const SizedBox(height: 16),
+                      QueryButton(
+                        label: "Activate Node",
+                        onPressed: triggerSignUp,
+                        isLoading: _isLoading,
+                        isDone: _isDone,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 8),
-              //passwd input field
-              TextFieldInput(
-                controller: _passController,
-                hintText: "Passphrase",
-                inputType: TextInputType.visiblePassword,
-                isPassword: true,
-              ),
-              const SizedBox(height: 16),
-              QueryButton(
-                label: "Add to Mainframe",
-                onPressed: () async {
-                  log("Executing...");
-                  setState(() => buttonState = ButtonState.loading);
-                  await Future.delayed(
-                    const Duration(seconds: 3),
-                  );
-                  setState(() => buttonState = ButtonState.done);
-                  await Future.delayed(
-                    const Duration(seconds: 3),
-                  );
-                  setState(() => buttonState = ButtonState.init);
-                  log("Done.");
-                },
-                isLoading: _isLoading,
-                isDone: _isDone,
-              ),
+
               Flexible(
                 child: Container(),
-                flex: 2,
+                flex: 1,
               )
             ],
           ),

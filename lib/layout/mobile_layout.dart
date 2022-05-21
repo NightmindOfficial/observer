@@ -13,6 +13,6 @@ class MobileLayout extends StatelessWidget {
     //   ),
     // );
 
-    return const RegisterScreen();
+    return const LoginScreen();
   }
 }

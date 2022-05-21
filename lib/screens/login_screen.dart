@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/size_guide.dart';
+import 'package:observer/resources/authentication.dart';
+import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/widgets/query_button.dart';
 import 'package:observer/widgets/text_field_input.dart';
 
@@ -17,7 +19,44 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _mailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  ButtonState buttonState = ButtonState.init;
+  ButtonState _buttonState = ButtonState.init;
+
+  void triggerLogin() async {
+    setState(() {
+      _buttonState = ButtonState.loading;
+    });
+
+    String computationResult = await Authentication().signInUser(
+      mail: _mailController.text,
+      pass: _passController.text,
+    );
+
+    setState(() {
+      if (computationResult == "Connection to Observer Network established.") {
+        _buttonState = ButtonState.done;
+      } else {
+        _buttonState = ButtonState.init;
+      }
+    });
+
+    log(computationResult);
+    showSnackbar(
+      computationResult,
+      context,
+      snackbarIntent:
+          computationResult == "Connection to Observer Network established."
+              ? SnackbarIntent.info
+              : SnackbarIntent.error,
+    );
+    await Future.delayed(
+      const Duration(
+        seconds: 1,
+      ),
+    );
+    setState(() {
+      _buttonState = ButtonState.init;
+    });
+  }
 
   @override
   void dispose() {
@@ -28,9 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isLoading = (buttonState == ButtonState.loading) ||
-        (buttonState == ButtonState.done);
-    bool _isDone = buttonState == ButtonState.done;
+    bool _isLoading = (_buttonState == ButtonState.loading) ||
+        (_buttonState == ButtonState.done);
+    bool _isDone = _buttonState == ButtonState.done;
 
     return Scaffold(
       body: SafeArea(
@@ -80,19 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               QueryButton(
                 label: "Establish Connection",
-                onPressed: () async {
-                  log("Executing...");
-                  setState(() => buttonState = ButtonState.loading);
-                  await Future.delayed(
-                    const Duration(seconds: 3),
-                  );
-                  setState(() => buttonState = ButtonState.done);
-                  await Future.delayed(
-                    const Duration(seconds: 3),
-                  );
-                  setState(() => buttonState = ButtonState.init);
-                  log("Done.");
-                },
+                onPressed: triggerLogin,
                 isLoading: _isLoading,
                 isDone: _isDone,
               ),

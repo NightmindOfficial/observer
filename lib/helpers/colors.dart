@@ -9,3 +9,8 @@ const accentColor = Color(0xFFB8DBD9);
 
 const primaryColor = Color(0xFFEEEEEE);
 const secondaryColor = Colors.grey;
+
+const errorColor = Colors.red;
+const warningColor = Color(0XFFFDD835);
+const infoColor = accentColor;
+const debugColor = mobileSearchColor;
