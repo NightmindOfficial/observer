@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/resources/authentication.dart';
+import 'package:observer/screens/register_screen.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/widgets/query_button.dart';
 import 'package:observer/widgets/text_field_input.dart';
@@ -67,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeGuide().init(context);
     bool _isLoading = (_buttonState == ButtonState.loading) ||
         (_buttonState == ButtonState.done);
     bool _isDone = _buttonState == ButtonState.done;
@@ -126,7 +128,29 @@ class _LoginScreenState extends State<LoginScreen> {
               Flexible(
                 child: Container(),
                 flex: 2,
-              )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                      ),
+                    ),
+                    child: Container(
+                      child: const Text(
+                        'Add Observer Node',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: accentColor,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

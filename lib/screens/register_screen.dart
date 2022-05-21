@@ -194,11 +194,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-
               Flexible(
                 child: Container(),
                 flex: 1,
-              )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      child: const Text(
+                        'Connect with existing Node',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: accentColor,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

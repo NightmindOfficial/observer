@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
@@ -29,11 +30,43 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
       title: 'Observer',
-      home: const ResponsiveLayout(
-        mobileScreenLayout: MobileLayout(),
-        webScreenLayout: WebLayout(),
-        smallScreenLayout: DenseWebLayout(),
+
+      home: StreamBuilder(
+        // stream: FirebaseAuth.instance.idTokenChanges(), // Listen to any user changes INCLUDING cross-platform installs
+        // stream: FirebaseAuth.instance.userChanges(), //Listen to any user changes INCLUDING parameter updates (e.g. password update etc.)
+        stream: FirebaseAuth.instance
+            .authStateChanges(), //Listen to signins and signouts, nothing more.
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              return const ResponsiveLayout(
+                mobileScreenLayout: MobileLayout(),
+                webScreenLayout: WebLayout(),
+                smallScreenLayout: DenseWebLayout(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("${snapshot.error}"),
+              );
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          } else {
+            return const LoginScreen();
+          }
+        },
       ),
+
+      // home: const ResponsiveLayout(
+      //   mobileScreenLayout: MobileLayout(),
+      //   webScreenLayout: WebLayout(),
+      //   smallScreenLayout: DenseWebLayout(),
+      // ),
     );
   }
 }

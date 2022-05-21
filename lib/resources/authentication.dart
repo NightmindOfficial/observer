@@ -52,6 +52,8 @@ class Authentication {
           'profilePictureURL': profilePictureURL,
         });
         computationResult = "Observer node created successfully.";
+      } else {
+        computationResult = "Please fill all required data points.";
       }
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
