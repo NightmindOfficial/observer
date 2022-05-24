@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:observer/models/observer.dart';
 import 'package:observer/resources/storage.dart';
 
 class Authentication {
@@ -20,7 +22,9 @@ class Authentication {
         "An unknown error occurred. Please contact administrator.";
 
     try {
-      if (email.isNotEmpty && passphrase.isNotEmpty) // && profilepic != null)
+      if (email.isNotEmpty &&
+          passphrase.isNotEmpty &&
+          name.length >= 3) // && profilepic != null)
       {
         //register new user in FirebaseAuth
         UserCredential userCredentials = await _auth
@@ -41,17 +45,22 @@ class Authentication {
         }
 
         //add user to database in FirebaseFirestore
+        Observer newObserver = Observer(
+          name: name,
+          email: email,
+          uid: userCredentials.user!.uid,
+          creationTime: DateTime.now(),
+          profilePictureURL: profilePictureURL,
+        );
+
         await _firestore
             .collection('observers')
             .doc(userCredentials.user!.uid)
-            .set({
-          'name': name,
-          'email': email,
-          'uid': userCredentials.user!.uid,
-          'creationTime': DateTime.now(),
-          'profilePictureURL': profilePictureURL,
-        });
+            .set(newObserver.toJSON());
+
         computationResult = "Observer node created successfully.";
+      } else if (name.length < 3) {
+        computationResult = "Please use a name of at least three characters.";
       } else {
         computationResult = "Please fill all required data points.";
       }
@@ -130,5 +139,18 @@ class Authentication {
       computationResult = e.toString();
     }
     return computationResult;
+  }
+
+  /// PASS OBSERVER DATA ON TO PROVIDER
+
+  Future<Observer> getObserverDetails() async {
+    User currentObserver = _auth.currentUser!;
+    log("Fetching data for ${currentObserver.uid}");
+
+    DocumentSnapshot snap =
+        await _firestore.collection('observers').doc(currentObserver.uid).get();
+
+    log("Got Data: ${snap.data().toString()}");
+    return Observer.fromSnap(snap);
   }
 }

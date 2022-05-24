@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/size_guide.dart';
+import 'package:observer/layout/dense_web_layout.dart';
+import 'package:observer/layout/mobile_layout.dart';
+import 'package:observer/layout/responsive_layout.dart';
+import 'package:observer/layout/web_layout.dart';
 import 'package:observer/resources/authentication.dart';
 import 'package:observer/screens/register_screen.dart';
 import 'package:observer/utils/snackbar_creator.dart';
@@ -35,6 +39,16 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       if (computationResult == "Connection to Observer Network established.") {
         _buttonState = ButtonState.done;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => const ResponsiveLayout(
+                  mobileScreenLayout: MobileLayout(),
+                  webScreenLayout: WebLayout(),
+                  smallScreenLayout: DenseWebLayout(),
+                )),
+          ),
+        );
       } else {
         _buttonState = ButtonState.init;
       }
@@ -49,14 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ? SnackbarIntent.info
               : SnackbarIntent.error,
     );
-    await Future.delayed(
-      const Duration(
-        seconds: 1,
-      ),
-    );
-    setState(() {
-      _buttonState = ButtonState.init;
-    });
+    // await Future.delayed(
+    //   const Duration(
+    //     seconds: 1,
+    //   ),
+    // );
+    // setState(() {
+    //   _buttonState = ButtonState.init;
+    // });
   }
 
   @override
@@ -133,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(
+                    onTap: () => Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => const RegisterScreen(),
                       ),

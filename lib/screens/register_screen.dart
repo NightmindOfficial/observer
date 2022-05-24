@@ -1,13 +1,19 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/no_glow.dart';
 import 'package:observer/helpers/size_guide.dart';
+import 'package:observer/layout/dense_web_layout.dart';
+import 'package:observer/layout/mobile_layout.dart';
+import 'package:observer/layout/responsive_layout.dart';
+import 'package:observer/layout/web_layout.dart';
 import 'package:observer/resources/authentication.dart';
+import 'package:observer/screens/login_screen.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/utils/utils.dart';
 import 'package:observer/widgets/query_button.dart';
@@ -57,6 +63,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       if (computationResult == "Observer node created successfully.") {
         _buttonState = ButtonState.done;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => const ResponsiveLayout(
+                  mobileScreenLayout: MobileLayout(),
+                  webScreenLayout: WebLayout(),
+                  smallScreenLayout: DenseWebLayout(),
+                )),
+          ),
+        );
       } else {
         _buttonState = ButtonState.init;
       }
@@ -70,14 +86,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ? SnackbarIntent.info
           : SnackbarIntent.error,
     );
-    await Future.delayed(
-      const Duration(
-        seconds: 1,
-      ),
-    );
-    setState(() {
-      _buttonState = ButtonState.init;
-    });
+    // await Future.delayed(
+    //   const Duration(
+    //     seconds: 1,
+    //   ),
+    // );
+    // setState(() {
+    //   _buttonState = ButtonState.init;
+    // });
   }
 
   @override
@@ -157,7 +173,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
 
               Expanded(
-                flex: 2,
+                flex: kIsWeb ? 4 : 2,
                 child: ScrollConfiguration(
                   behavior: NoGlow(),
                   child: ListView(
@@ -202,7 +218,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    ),
                     child: Container(
                       child: const Text(
                         'Connect with existing Node',

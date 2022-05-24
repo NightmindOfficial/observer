@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/size_guide.dart';
+import 'package:observer/providers/observer_provider.dart';
+import 'package:provider/provider.dart';
 
-class ResponsiveLayout extends StatelessWidget {
+class ResponsiveLayout extends StatefulWidget {
   final Widget webScreenLayout;
   final Widget smallScreenLayout;
   final Widget mobileScreenLayout;
@@ -15,6 +17,25 @@ class ResponsiveLayout extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ResponsiveLayout> createState() => _ResponsiveLayoutState();
+}
+
+class _ResponsiveLayoutState extends State<ResponsiveLayout> {
+  @override
+  void initState() {
+    addData();
+    super.initState();
+  }
+
+  addData() async {
+    ObserverProvider _observerProvider = Provider.of<ObserverProvider>(
+      context,
+      listen: false,
+    );
+    await _observerProvider.refreshObserver();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeGuide().init(context);
 
@@ -22,12 +43,12 @@ class ResponsiveLayout extends StatelessWidget {
       builder: (context, constraints) {
         if (kIsWeb) {
           if (constraints.maxWidth > webScreenSize) {
-            return webScreenLayout;
+            return widget.webScreenLayout;
           } else {
-            return smallScreenLayout;
+            return widget.smallScreenLayout;
           }
         } else {
-          return mobileScreenLayout;
+          return widget.mobileScreenLayout;
         }
       },
     );
