@@ -1,43 +1,63 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/providers/observer_provider.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 import 'package:provider/provider.dart';
 
-class MobileLayout extends StatelessWidget {
+class MobileLayout extends StatefulWidget {
   const MobileLayout({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    ObserverProvider _observer = Provider.of<ObserverProvider>(context);
+  State<MobileLayout> createState() => _MobileLayoutState();
+}
 
+class _MobileLayoutState extends State<MobileLayout> {
+  late PageController pageController;
+  int _pageIndex = 0;
+
+  @override
+  void initState() {
+    pageController = PageController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  void navigationTapped(int page) {
+    pageController.jumpToPage(page);
+  }
+
+  void setPage(int page) {
+    setState(() {
+      _pageIndex = page;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Logged in as ${_observer.observer.name}"),
-            Text("Observer ID: ${_observer.observer.uid}"),
-            const SizedBox(
-              height: 32.0,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: accentColor,
-              ),
-              onPressed: () {
-                _auth.signOut();
-              },
-              child: const Text("Log Out"),
-            ),
-          ],
-        ),
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        onPageChanged: setPage,
+        children: naviagtionItems,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
+        selectedIconTheme: const IconThemeData(
+          color: primaryColor,
+        ),
+        unselectedIconTheme: const IconThemeData(
+          color: secondaryColor,
+        ),
+        backgroundColor: mobileBackgroundColor,
+        currentIndex: _pageIndex,
         iconSize: 26,
         selectedFontSize: 14,
         showUnselectedLabels: true,
@@ -60,7 +80,7 @@ class MobileLayout extends StatelessWidget {
             label: "Network",
           ),
         ],
-        onTap: (value) {},
+        onTap: navigationTapped,
       ),
     );
     // return const HomeScreen();

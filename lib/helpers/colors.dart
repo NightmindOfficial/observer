@@ -8,7 +8,7 @@ const mobileSearchColor = Color.fromRGBO(38, 38, 38, 1);
 const accentColor = Color(0xFFB8DBD9);
 
 const primaryColor = Color(0xFFEEEEEE);
-const secondaryColor = Colors.grey;
+const secondaryColor = Color.fromARGB(255, 108, 108, 108);
 
 const errorColor = Colors.red;
 const warningColor = Color(0XFFFDD835);
