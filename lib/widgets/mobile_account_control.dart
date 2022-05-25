@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/size_guide.dart';
+import 'package:observer/models/observer.dart';
 import 'package:observer/providers/observer_provider.dart';
 import 'package:observer/screens/context/mobile_workspace_manager/mobile_workspace_manager_screen.dart';
 import 'package:observer/widgets/account_avatar.dart';
@@ -13,7 +14,7 @@ class MobileAccountControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ObserverProvider observerProvider = Provider.of<ObserverProvider>(context);
+    Observer observer = Provider.of<ObserverProvider>(context).observer;
 
     return Drawer(
       backgroundColor: mobileSearchColor,
@@ -23,8 +24,8 @@ class MobileAccountControl extends StatelessWidget {
             child: ListView(
               children: [
                 UserAccountsDrawerHeader(
-                  accountName: Text("Hello, ${observerProvider.observer.name}"),
-                  accountEmail: Text(observerProvider.observer.email),
+                  accountName: Text("Hello, ${observer.name}"),
+                  accountEmail: Text(observer.email),
                   currentAccountPicture: const AccountAvatar(link: false),
                   onDetailsPressed: () => log("Tapped!"),
                 ),

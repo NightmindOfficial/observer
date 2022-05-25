@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/global_variables.dart';
+import 'package:observer/models/observer.dart';
 import 'package:observer/providers/observer_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +10,7 @@ class AccountAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ObserverProvider observerProvider = Provider.of<ObserverProvider>(context);
+    Observer observer = Provider.of<ObserverProvider>(context).observer;
 
     return Center(
       child: GestureDetector(
@@ -18,7 +19,7 @@ class AccountAvatar extends StatelessWidget {
           height: customAppBarSize * mobileAccountWidgetFraction,
           child: ClipRRect(
             child: Image.network(
-              observerProvider.observer.profilePictureURL,
+              observer.profilePictureURL,
               frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                 return child;
               },
