@@ -5,6 +5,7 @@ class TextFieldInput extends StatelessWidget {
   final bool isPassword;
   final String hintText;
   final TextInputType inputType;
+  final bool autoFocus;
 
   const TextFieldInput({
     Key? key,
@@ -12,6 +13,7 @@ class TextFieldInput extends StatelessWidget {
     this.isPassword = false,
     this.hintText = "",
     this.inputType = TextInputType.text,
+    this.autoFocus = false,
   }) : super(key: key);
 
   @override
@@ -21,6 +23,7 @@ class TextFieldInput extends StatelessWidget {
 
     return TextField(
       controller: controller,
+      autofocus: autoFocus,
       decoration: InputDecoration(
         hintText: hintText,
         border: inputBorder,

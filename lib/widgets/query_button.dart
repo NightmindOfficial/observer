@@ -45,6 +45,7 @@ Widget buildButton({
   required String label,
 }) {
   return ElevatedButton(
+    autofocus: true,
     style: ElevatedButton.styleFrom(
       shape: const StadiumBorder(),
       fixedSize: const Size(100, 100),

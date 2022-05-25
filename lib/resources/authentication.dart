@@ -145,12 +145,12 @@ class Authentication {
 
   Future<Observer> getObserverDetails() async {
     User currentObserver = _auth.currentUser!;
-    log("Fetching data for ${currentObserver.uid}");
+    // log("Fetching data for ${currentObserver.uid}");
 
     DocumentSnapshot snap =
         await _firestore.collection('observers').doc(currentObserver.uid).get();
 
-    log("Got Data: ${snap.data().toString()}");
+    // log("Got Data: ${snap.data().toString()}");
     return Observer.fromSnap(snap);
   }
 }

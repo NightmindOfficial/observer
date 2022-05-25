@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/layout/dense_web_layout.dart';
 import 'package:observer/layout/mobile_layout.dart';
@@ -9,14 +10,14 @@ import 'package:observer/layout/responsive_layout.dart';
 import 'package:observer/layout/web_layout.dart';
 import 'package:observer/providers/observer_provider.dart';
 import 'package:observer/resources/firebase_options.dart';
-import 'package:observer/screens/login_screen.dart';
+import 'package:observer/screens/auth/login_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-    SystemUiOverlay.bottom, //This line is used for showing the bottom bar
-  ]);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+  //   SystemUiOverlay.bottom, //This line is used for showing the bottom bar
+  // ]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

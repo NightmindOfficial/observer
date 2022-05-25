@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
-import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 
 class WebLayout extends StatelessWidget {

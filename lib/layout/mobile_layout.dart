@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/global_variables.dart';
-import 'package:observer/helpers/size_guide.dart';
-import 'package:observer/providers/observer_provider.dart';
-import 'package:observer/utils/snackbar_creator.dart';
-import 'package:provider/provider.dart';
+import 'package:observer/widgets/mobile_account_control.dart';
+import 'package:observer/widgets/mobile_navigation.dart';
 
 class MobileLayout extends StatefulWidget {
   const MobileLayout({Key? key}) : super(key: key);
@@ -43,24 +40,40 @@ class _MobileLayoutState extends State<MobileLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const MobileAccountControl(),
+      endDrawerEnableOpenDragGesture: false,
+      appBar: MobileNavigation(pageIndex: _pageIndex),
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: setPage,
-        children: naviagtionItems,
+        children: [
+          ...navigationItems.map((item) {
+            return item['body'];
+          }),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: accentColor,
         selectedIconTheme: const IconThemeData(
           color: primaryColor,
         ),
         unselectedIconTheme: const IconThemeData(
           color: secondaryColor,
         ),
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
+        // unselectedLabelStyle: const TextStyle(
+        //   color: secondaryColor,
+        //   fontWeight: FontWeight.w300,
+        //   fontSize: 14,
+        // ),
         backgroundColor: mobileBackgroundColor,
         currentIndex: _pageIndex,
-        iconSize: 26,
-        selectedFontSize: 14,
-        showUnselectedLabels: true,
+        iconSize: 28,
+        showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(

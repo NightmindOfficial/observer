@@ -13,7 +13,7 @@ import 'package:observer/layout/mobile_layout.dart';
 import 'package:observer/layout/responsive_layout.dart';
 import 'package:observer/layout/web_layout.dart';
 import 'package:observer/resources/authentication.dart';
-import 'package:observer/screens/login_screen.dart';
+import 'package:observer/screens/auth/login_screen.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/utils/utils.dart';
 import 'package:observer/widgets/query_button.dart';
