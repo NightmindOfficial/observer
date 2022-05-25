@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/size_guide.dart';
 
 class QueryButton extends StatefulWidget {
   final bool isLoading;
   final bool isDone;
   final void Function() onPressed;
-  final String label;
+  final Widget? child;
   final double height;
   const QueryButton({
     Key? key,
-    required this.label,
+    required this.child,
     required this.onPressed,
     required this.isLoading,
     this.isDone = false,
@@ -30,7 +31,7 @@ class _QueryButtonState extends State<QueryButton> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
       child: !widget.isLoading
-          ? buildButton(onPressed: widget.onPressed, label: widget.label)
+          ? buildButton(onPressed: widget.onPressed, child: widget.child)
           : buildLoadingButton(
               isDone: widget.isDone,
             ),
@@ -42,7 +43,7 @@ class _QueryButtonState extends State<QueryButton> {
 
 Widget buildButton({
   required void Function() onPressed,
-  required String label,
+  required Widget? child,
 }) {
   return ElevatedButton(
     autofocus: true,
@@ -53,16 +54,10 @@ Widget buildButton({
       primary: accentColor,
       padding: EdgeInsets.zero,
       splashFactory: NoSplash.splashFactory,
+      textStyle: buttonTextStyle,
     ),
     onPressed: onPressed,
-    child: Text(
-      label,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: mobileBackgroundColor,
-      ),
-    ),
+    child: child,
   );
 }
 

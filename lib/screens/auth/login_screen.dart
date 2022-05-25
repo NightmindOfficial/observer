@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/layout/dense_web_layout.dart';
 import 'package:observer/layout/mobile_layout.dart';
@@ -11,7 +12,7 @@ import 'package:observer/layout/web_layout.dart';
 import 'package:observer/resources/authentication.dart';
 import 'package:observer/screens/auth/register_screen.dart';
 import 'package:observer/utils/snackbar_creator.dart';
-import 'package:observer/widgets/query_button.dart';
+import 'package:observer/widgets/buttons/query_button.dart';
 import 'package:observer/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -134,7 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
               QueryButton(
-                label: "Establish Connection",
+                child: Text(
+                  "Establish Connection",
+                  style: buttonTextStyle,
+                ),
                 onPressed: triggerLogin,
                 isLoading: _isLoading,
                 isDone: _isDone,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:observer/helpers/colors.dart';
+import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/no_glow.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/layout/dense_web_layout.dart';
@@ -16,7 +17,7 @@ import 'package:observer/resources/authentication.dart';
 import 'package:observer/screens/auth/login_screen.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/utils/utils.dart';
-import 'package:observer/widgets/query_button.dart';
+import 'package:observer/widgets/buttons/query_button.dart';
 import 'package:observer/widgets/text_field_input.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -201,7 +202,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       const SizedBox(height: 16),
                       QueryButton(
-                        label: "Activate Node",
+                        child: Text(
+                          "Activate Node",
+                          style: buttonTextStyle,
+                        ),
                         onPressed: triggerSignUp,
                         isLoading: _isLoading,
                         isDone: _isDone,
