@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/global_variables.dart';
-import 'package:observer/helpers/size_guide.dart';
 
 class QueryButton extends StatefulWidget {
   final bool isLoading;
@@ -49,7 +48,6 @@ Widget buildButton({
     autofocus: true,
     style: ElevatedButton.styleFrom(
       shape: const StadiumBorder(),
-      fixedSize: const Size(100, 100),
       elevation: 0,
       primary: accentColor,
       padding: EdgeInsets.zero,
@@ -72,6 +70,7 @@ Widget buildLoadingButton({
       shape: const CircleBorder(),
       primary: boxColor,
       padding: EdgeInsets.zero,
+      textStyle: buttonTextStyle,
     ),
     child: Center(
       child: isDone

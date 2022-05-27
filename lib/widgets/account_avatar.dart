@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 
 class AccountAvatar extends StatelessWidget {
   final bool link;
-  const AccountAvatar({Key? key, this.link = true}) : super(key: key);
+  const AccountAvatar({
+    Key? key,
+    this.link = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

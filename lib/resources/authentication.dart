@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:observer/models/observer.dart';
+import 'package:observer/models/workspace.dart';
 import 'package:observer/resources/storage.dart';
+import 'package:uuid/uuid.dart';
 
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -57,6 +59,26 @@ class Authentication {
             .collection('observers')
             .doc(userCredentials.user!.uid)
             .set(newObserver.toJSON());
+
+        //Set up the default workspace for the new user without triggering another Snackbar
+
+        String defaultWID = const Uuid().v1();
+
+        Workspace defaultWorkspace = Workspace(
+          name: "Default Workspace",
+          wid: defaultWID,
+          ownerUID: userCredentials.user!.uid,
+          ownerName: name,
+          ownerProfilePicURL: profilePictureURL,
+          creationTime: DateTime.now(),
+          allowEditing: [],
+          persistent: true,
+        );
+
+        await _firestore
+            .collection('workspaces')
+            .doc(defaultWID)
+            .set(defaultWorkspace.toJSON());
 
         computationResult = "Observer node created successfully.";
       } else if (name.length < 3) {

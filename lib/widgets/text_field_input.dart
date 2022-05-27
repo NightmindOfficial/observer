@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class TextFieldInput extends StatelessWidget {
@@ -22,6 +24,7 @@ class TextFieldInput extends StatelessWidget {
         OutlineInputBorder(borderSide: Divider.createBorderSide(context));
 
     return TextField(
+      // onChanged: (value) => log(controller.text), // Use only for dev purposes
       controller: controller,
       autofocus: autoFocus,
       decoration: InputDecoration(

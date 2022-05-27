@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/size_guide.dart';
@@ -78,7 +79,9 @@ class MobileAccountControl extends StatelessWidget {
                         // padding: EdgeInsets.zero,
                         // splashFactory: NoSplash.splashFactory,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        FirebaseAuth.instance.signOut();
+                      },
                       child: const Text(
                         "Disconnect",
                         style: TextStyle(

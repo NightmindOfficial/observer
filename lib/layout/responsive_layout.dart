@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/providers/observer_provider.dart';
@@ -33,6 +36,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
       listen: false,
     );
     await _observerProvider.refreshObserver();
+    log(" ${DateFormat.Hms().format(DateTime.now())}: Models have been updated.");
   }
 
   @override

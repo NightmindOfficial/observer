@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:observer/helpers/colors.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/screens/core/subjects_screen.dart';
 
@@ -27,3 +28,9 @@ double customAppBarSize =
     proportionateScreenHeightFraction(ScreenFraction.onetenth);
 
 double mobileAccountWidgetFraction = 2 / 3;
+
+TextStyle buttonTextStyle = const TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: mobileBackgroundColor,
+);
