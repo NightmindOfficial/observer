@@ -189,4 +189,10 @@ class Authentication {
     // log("Got Data: ${snap.data().toString()}");
     return Observer.fromSnap(snap);
   }
+
+  /// SIGN OUT / LOG OUT
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 }

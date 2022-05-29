@@ -7,7 +7,10 @@ import 'package:observer/models/observer.dart';
 import 'package:observer/models/workspace.dart';
 import 'package:observer/providers/observer_provider.dart';
 import 'package:observer/providers/workspace_provider.dart';
+import 'package:observer/resources/authentication.dart';
+import 'package:observer/screens/auth/login_screen.dart';
 import 'package:observer/screens/context/mobile_workspace_manager/mobile_workspace_manager_screen.dart';
+import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/widgets/account_avatar.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +30,18 @@ class MobileAccountControl extends StatelessWidget {
             child: ListView(
               children: [
                 UserAccountsDrawerHeader(
-                  accountName: Text("Hello, ${observer.name}"),
-                  accountEmail: Text(observer.email),
+                  accountName: Text(
+                    "Hello, ${observer.name}",
+                    style: const TextStyle(
+                      color: mobileBackgroundColor,
+                    ),
+                  ),
+                  accountEmail: Text(
+                    observer.email,
+                    style: const TextStyle(
+                      color: secondaryColor,
+                    ),
+                  ),
                   currentAccountPicture: const AccountAvatar(link: false),
                   onDetailsPressed: () => log("Tapped!"),
                 ),
@@ -46,14 +59,6 @@ class MobileAccountControl extends StatelessWidget {
                               const MobileWorkspaceManagerScreen(),
                         ),
                       ),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.workspaces_rounded),
-                      title: Text("Manage my workspaces"),
-                    ),
-                    const ListTile(
-                      leading: Icon(Icons.workspaces_rounded),
-                      title: Text("Manage my workspaces"),
                     ),
                   ],
                 ),
@@ -81,8 +86,16 @@ class MobileAccountControl extends StatelessWidget {
                         // padding: EdgeInsets.zero,
                         // splashFactory: NoSplash.splashFactory,
                       ),
-                      onPressed: () {
-                        FirebaseAuth.instance.signOut();
+                      onPressed: () async {
+                        await Authentication().signOut();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: ((context) => const LoginScreen()),
+                          ),
+                        );
+                        showSnackbar(
+                            "Connection to Observer Network terminated.",
+                            context);
                       },
                       child: const Text(
                         "Disconnect",

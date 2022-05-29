@@ -6,13 +6,9 @@ class SubjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              Scaffold.of(context).openEndDrawer();
-            },
-            child: Text("Open Drawer")),
+        child: Text("Dream big."),
       ),
     );
   }
