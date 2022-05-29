@@ -8,6 +8,8 @@ class Observer {
   final String uid;
   final DateTime creationTime;
   final String profilePictureURL;
+  final String defaultWID;
+  final String currentWID;
 
   Observer({
     required this.name,
@@ -15,6 +17,8 @@ class Observer {
     required this.uid,
     required this.creationTime,
     required this.profilePictureURL,
+    required this.defaultWID,
+    required this.currentWID,
   });
 
   Map<String, dynamic> toJSON() => {
@@ -23,6 +27,8 @@ class Observer {
         'uid': uid,
         'creationTime': creationTime,
         'profilePictureURL': profilePictureURL,
+        'defaultWID': defaultWID,
+        'currentWID': currentWID,
       };
 
   static Observer fromSnap(DocumentSnapshot snap) {
@@ -34,6 +40,8 @@ class Observer {
       uid: snapshot['uid'],
       creationTime: snapshot['creationTime'].toDate(),
       profilePictureURL: snapshot['profilePictureURL'],
+      defaultWID: snapshot['defaultWID'],
+      currentWID: snapshot['currentWID'],
     );
   }
 }

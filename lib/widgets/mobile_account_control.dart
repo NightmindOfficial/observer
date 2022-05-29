@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
-import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/models/observer.dart';
+import 'package:observer/models/workspace.dart';
 import 'package:observer/providers/observer_provider.dart';
+import 'package:observer/providers/workspace_provider.dart';
 import 'package:observer/screens/context/mobile_workspace_manager/mobile_workspace_manager_screen.dart';
 import 'package:observer/widgets/account_avatar.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class MobileAccountControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Observer observer = Provider.of<ObserverProvider>(context).observer;
+    Workspace workspace = Provider.of<WorkspaceProvider>(context).workspace;
 
     return Drawer(
       backgroundColor: mobileSearchColor,
@@ -36,7 +38,7 @@ class MobileAccountControl extends StatelessWidget {
                     ListTile(
                       leading: const Icon(Icons.workspaces_rounded),
                       title: const Text("Manage my workspaces"),
-                      subtitle: const Text("Active: Lab"),
+                      subtitle: Text("Active: ${workspace.name}"),
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(

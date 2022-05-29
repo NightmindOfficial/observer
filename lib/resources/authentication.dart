@@ -53,6 +53,8 @@ class Authentication {
           uid: userCredentials.user!.uid,
           creationTime: DateTime.now(),
           profilePictureURL: profilePictureURL,
+          defaultWID: 'unset',
+          currentWID: 'unset',
         );
 
         await _firestore
@@ -62,7 +64,7 @@ class Authentication {
 
         //Set up the default workspace for the new user without triggering another Snackbar
 
-        String defaultWID = const Uuid().v1();
+        String defaultWID = const Uuid().v4();
 
         Workspace defaultWorkspace = Workspace(
           name: "Default Workspace",
@@ -79,6 +81,18 @@ class Authentication {
             .collection('workspaces')
             .doc(defaultWID)
             .set(defaultWorkspace.toJSON());
+
+        //Add the new Default WID to the observer record
+
+        await _firestore
+            .collection('observers')
+            .doc(userCredentials.user!.uid)
+            .update(
+          {
+            'defaultWID': defaultWID,
+            'currentWID': defaultWID,
+          },
+        );
 
         computationResult = "Observer node created successfully.";
       } else if (name.length < 3) {

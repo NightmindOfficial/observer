@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:observer/helpers/colors.dart';
 import 'package:observer/models/observer.dart';
@@ -67,6 +65,7 @@ Future<String?> workspaceManipulatorEdit(
   ).observer;
 
   _nameController.text = workspace['name'];
+
   return showDialog(
       context: context,
       builder: (context) {
@@ -82,7 +81,9 @@ Future<String?> workspaceManipulatorEdit(
             TextButton(
               onPressed: (currentObserver.uid == workspace['ownerUID'] &&
                       !workspace['persistent'])
-                  ? () {}
+                  ? () async {
+                      Navigator.of(context).pop("DELETE");
+                    }
                   : null,
               child: Text(
                 "Delete",
@@ -99,6 +100,7 @@ Future<String?> workspaceManipulatorEdit(
                   String res = await Firestore().editExistingWorkspace(
                     name: _nameController.text,
                     workspace: workspace,
+                    context: context,
                   );
                   showSnackbar(
                     res == "success" ? "Workspace updated successfully." : res,
@@ -121,17 +123,66 @@ Future<String?> workspaceManipulatorEdit(
       });
 }
 
-List<Widget> editActions(
-        BuildContext context, TextEditingController controller) =>
-    [
-      TextButton(
-        onPressed: () {},
-        child: const Text("Delete"),
-      ),
-      TextButton(
-        onPressed: () {
-          Navigator.of(context).pop(controller.text);
-        },
-        child: const Text("Update"),
-      ),
-    ];
+Future<String?> workspaceManipulatorDelete(
+    BuildContext context, Map<String, dynamic> workspace) {
+  TextEditingController _confirmationController = TextEditingController();
+
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Are you sure?"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Deleting a workspace is permanent and CANNOT be undone. Be aware that you might lose all your intel.\n\nTo make sure you understand the impact of your actions, please type in the name of the workspace again.",
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFieldInput(
+                  controller: _confirmationController,
+                  hintText: 'Type "${workspace['name']}"'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                FocusScope.of(context).unfocus();
+                if (_confirmationController.text == workspace['name']) {
+                  String res = await Firestore().deleteWorkspace(
+                    workspace: workspace,
+                    context: context,
+                  );
+                  showSnackbar(
+                    res == "success" ? "Workspace deleted successfully." : res,
+                    context,
+                    snackbarIntent: res == "success"
+                        ? SnackbarIntent.info
+                        : SnackbarIntent.error,
+                  );
+
+                  Navigator.of(context).pop(res);
+                } else {
+                  Navigator.of(context)
+                      .pop("Deletion aborted: Safety Check not passed");
+                }
+              },
+              child: const Text(
+                "Yes, delete all my data",
+                style: TextStyle(
+                  color: errorColor,
+                ),
+              ),
+            ),
+          ],
+        );
+      });
+}

@@ -9,6 +9,7 @@ import 'package:observer/layout/mobile_layout.dart';
 import 'package:observer/layout/responsive_layout.dart';
 import 'package:observer/layout/web_layout.dart';
 import 'package:observer/providers/observer_provider.dart';
+import 'package:observer/providers/workspace_provider.dart';
 import 'package:observer/resources/firebase_options.dart';
 import 'package:observer/screens/auth/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ObserverProvider>(
           create: (_) => ObserverProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => WorkspaceProvider(),
         ),
       ],
       child: MaterialApp(

@@ -6,7 +6,6 @@ import 'package:observer/helpers/no_glow.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/models/observer.dart';
 import 'package:observer/providers/observer_provider.dart';
-import 'package:observer/resources/firestore.dart';
 import 'package:observer/utils/snackbar_creator.dart';
 import 'package:observer/widgets/buttons/query_button.dart';
 import 'package:observer/widgets/cards/workspace_card.dart';
@@ -25,7 +24,6 @@ class MobileWorkspaceManagerScreen extends StatefulWidget {
 class _MobileWorkspaceManagerScreenState
     extends State<MobileWorkspaceManagerScreen> {
   late TextEditingController _nameController;
-  late int ownNumberOfWorkspaces;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void createNewWorkspace() async {
@@ -61,6 +59,18 @@ class _MobileWorkspaceManagerScreenState
   Widget build(BuildContext context) {
     Observer currentObserver = Provider.of<ObserverProvider>(context).observer;
 
+    Stream<QuerySnapshot<Map<String, dynamic>>> _ownSnapshots = _firestore
+        .collection('workspaces')
+        .where('ownerUID', isEqualTo: currentObserver.uid)
+        .orderBy('creationTime', descending: true)
+        .snapshots();
+
+    Stream<QuerySnapshot<Map<String, dynamic>>> _sharedSnapshots = _firestore
+        .collection('workspaces')
+        .where('allowEditing', arrayContains: currentObserver.uid)
+        // .orderBy('name')
+        .snapshots();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const MobileNavigation(
@@ -80,11 +90,7 @@ class _MobileWorkspaceManagerScreenState
             ),
           ),
           StreamBuilder(
-            stream: _firestore
-                .collection('workspaces')
-                .where('ownerUID', isEqualTo: currentObserver.uid)
-                // .orderBy('name')
-                .snapshots(),
+            stream: _ownSnapshots,
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -107,8 +113,10 @@ class _MobileWorkspaceManagerScreenState
               }
               return Container(
                 constraints: BoxConstraints(
-                    maxHeight: proportionateScreenHeightFraction(
-                        ScreenFraction.onethird)),
+                  maxHeight: proportionateScreenHeightFraction(
+                    ScreenFraction.onethird,
+                  ),
+                ),
                 child: ScrollConfiguration(
                   behavior: NoGlow(),
                   child: ListView.builder(
@@ -136,11 +144,7 @@ class _MobileWorkspaceManagerScreenState
           ),
           Expanded(
             child: StreamBuilder(
-              stream: _firestore
-                  .collection('workspaces')
-                  .where('ownerUID', arrayContains: currentObserver.uid)
-                  // .orderBy('name')
-                  .snapshots(),
+              stream: _sharedSnapshots,
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -170,7 +174,7 @@ class _MobileWorkspaceManagerScreenState
                       itemBuilder: ((context, index) {
                         return WorkspaceCard(
                           snapshot.data!.docs[index].data(),
-                          subtext: WorkspaceSubtext.wid,
+                          subtext: WorkspaceSubtext.both,
                         );
                       })),
                 );

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:observer/helpers/global_variables.dart';
 import 'package:observer/helpers/size_guide.dart';
 import 'package:observer/providers/observer_provider.dart';
+import 'package:observer/providers/workspace_provider.dart';
 import 'package:provider/provider.dart';
 
 class ResponsiveLayout extends StatefulWidget {
@@ -35,8 +36,14 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
       context,
       listen: false,
     );
+    WorkspaceProvider _workspaceProvider = Provider.of<WorkspaceProvider>(
+      context,
+      listen: false,
+    );
     await _observerProvider.refreshObserver();
-    log(" ${DateFormat.Hms().format(DateTime.now())}: Models have been updated.");
+    log("${DateFormat.Hms().format(DateTime.now())}: Observer model has been updated.");
+    await _workspaceProvider.refreshWorkspace(context);
+    log("${DateFormat.Hms().format(DateTime.now())}: Workspace model has been updated.");
   }
 
   @override

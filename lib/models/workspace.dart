@@ -32,6 +32,17 @@ class Workspace {
         'persistent': persistent,
       };
 
+  static Workspace fromJSON(Map<String, dynamic> workspace) => Workspace(
+        name: workspace['name'],
+        wid: workspace['wid'],
+        ownerUID: workspace['ownerUID'],
+        ownerName: workspace['ownerName'],
+        ownerProfilePicURL: workspace['ownerProfilePicURL'],
+        creationTime: workspace['creationTime'].toDate(),
+        allowEditing: workspace['allowEditing'],
+        persistent: workspace['persistent'],
+      );
+
   static Workspace fromSnap(DocumentSnapshot snap) {
     Map<String, dynamic> snapshot = snap.data() as Map<String, dynamic>;
 
